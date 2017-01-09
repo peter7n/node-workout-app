@@ -1,12 +1,12 @@
 {
-  "name": "hello-world",
+  "name": "workout-db",
   "version": "1.0.0",
-  "description": "Hello world with express and node.js",
+  "description": "workout database using express and node.js",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "OSU",
+  "author": "Peter Nguyen",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.13.3",
