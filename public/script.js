@@ -1,6 +1,6 @@
 /*-------- Function definitions --------*/
 
-function renderTable(res, table) {
+function renderTable(res) {
   for (var i = 0; i < res.length; i++) {
     newRow = document.createElement("tr");
 
@@ -13,51 +13,13 @@ function renderTable(res, table) {
     }
     // Add buttons and hidden fields
     newCell = document.createElement("td");
-    newCell.innerHTML = '<form method="post"><input type="hidden" name="id" value="' + res[i].id + '" /><input type="submit" name="delete" value="delete" /></form>';
+    newCell.innerHTML = '<form method="post" onsubmit="deleteRow()"><input type="hidden" name="id" value="' + res[i].id + '" /><input type="submit" name="delete" value="delete" /></form>';
     newRow.appendChild(newCell);
 
-    table.appendChild(newRow);
+    newTable.appendChild(newRow);
   }
   // document.body.appendChild(newTable);
 }
-
-// function renderTable(res, table) {
-//   console.log(globalTest);
-//   globalTest = "Now changing global variable";
-//   console.log(globalTest);
-//   newRow = document.createElement("tr");
-//
-//   newHeader = document.createElement("th");
-//   newHeader.textContent = "Exercise";
-//   newRow.appendChild(newHeader);
-//   newHeader = document.createElement("th");
-//   newHeader.textContent = "Reps";
-//   newRow.appendChild(newHeader);
-//   newHeader = document.createElement("th");
-//   newHeader.textContent = "Weight";
-//   newRow.appendChild(newHeader);
-//   newHeader = document.createElement("th");
-//   newHeader.textContent = "Date";
-//   newRow.appendChild(newHeader);
-//   newHeader = document.createElement("th");
-//   newHeader.textContent = "Lbs=1";
-//   newRow.appendChild(newHeader);
-//
-//   newTable.appendChild(newRow);
-//
-//   newRow = document.createElement("tr");
-//   newCell = document.createElement("td");
-//   newCell.innerHTML = '<form method="post"><input type="hidden" name="id" value="33" /><input type="submit" name="delete" value="delete" /></form>';
-//   newRow.appendChild(newCell);
-//   table.appendChild(newRow);
-//
-//   newRow = document.createElement("tr");
-//   newCell = document.createElement("td");
-//   newCell.innerHTML = '<form method="post"><input type="hidden" name="id" value="34" /><input type="submit" name="delete" value="delete" /></form>';
-//   newRow.appendChild(newCell);
-//   newTable.appendChild(newRow);
-//   document.body.appendChild(newTable);
-// }
 
 function renderRow(res) {
   console.log("Row is: " + res);
@@ -80,7 +42,7 @@ function renderRow(res) {
   req.send(JSON.stringify(res));  // send row ID
 }
 
-function getRows(table) {
+function getRows() {
   var req = new XMLHttpRequest();
   req.open("GET", "http://52.89.230.63:3000/get", true);
   // req.setRequestHeader('Content-Type', 'application/json');
@@ -88,7 +50,7 @@ function getRows(table) {
   req.addEventListener("load", function() {
     if(req.status >= 200 && req.status < 400) {
       var response = JSON.parse(req.responseText);
-      renderTable(response, table);
+      renderTable(response);
       // console.log(response);
     }
     else {
@@ -133,19 +95,9 @@ function addRow() {
 }
 
 function deleteRow() {
-  // Add event listener to Delete button
-  var deleteButtons = parent.document.getElementsByName("delete");
-  console.log("del ele: " + JSON.stringify(deleteButtons));
-  console.log("delButtons length: " + deleteButtons.length);
-  deleteButtons[0].style.color = "red";
-
-  for (var i = 0; i < deleteButtons.length; i++) {
-    deleteButtons[i].addEventListener("click", function(event) {
-      console.log("delete clicked!");
-      event.preventDefault();
-    });
+  console.log("Delete clicked!");
+  event.preventDefault();
   }
-}
 
 /*-------- Main Method --------*/
 
@@ -153,7 +105,6 @@ var newTable = document.createElement("table");
 var newRow;
 var newHeader;
 var newCell;
-var globalTest = "This is a global variable";
 
 // Create header row
 newRow = document.createElement("tr");
@@ -177,28 +128,8 @@ newRow.appendChild(newHeader);
 newTable.appendChild(newRow);
 document.body.appendChild(newTable);
 
-
-
-
-// newRow = document.createElement("tr");
-// newCell = document.createElement("td");
-// newCell.innerHTML = '<form method="post"><input type="hidden" name="id" value="33" /><input type="submit" name="delete" value="delete" /></form>';
-// newRow.appendChild(newCell);
-// newTable.appendChild(newRow);
-//
-// newRow = document.createElement("tr");
-// newCell = document.createElement("td");
-// newCell.innerHTML = '<form method="post"><input type="hidden" name="id" value="34" /><input type="submit" name="delete" value="delete" /></form>';
-// newRow.appendChild(newCell);
-// newTable.appendChild(newRow);
-
-
-// var ref = document.getElementsByTagName('script')[0];
-// ref.parentNode.insertBefore(newTable, ref);
-
-
 // Get initial table data from server and render the table
-getRows(newTable);
+getRows();
 
 // document.addEventListener("DOMContentLoaded", addRow);
-document.addEventListener("DOMContentLoaded", deleteRow);
+document.addEventListener("DOMContentLoaded", addRow);
