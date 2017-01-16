@@ -13,7 +13,7 @@ function renderTable(res) {
     }
     // Add buttons and hidden fields
     newCell = document.createElement("td");
-    newCell.innerHTML = '<form method="post" onsubmit="deleteRow()"><input type="hidden" name="id" value="' + res[i].id + '" /><input type="submit" name="delete" value="delete" /></form>';
+    newCell.innerHTML = '<form method="post" onsubmit="deleteRow(this);"><input type="hidden" name="id" value="' + res[i].id + '" /><input type="submit" name="delete" value="delete" /></form>';
     newRow.appendChild(newCell);
 
     newTable.appendChild(newRow);
@@ -38,7 +38,6 @@ function renderRow(res) {
       console.log("Error in network request: " + request.statusText);
   })
 
-  console.log("sending payload: " + JSON.stringify(payload2));
   req.send(JSON.stringify(res));  // send row ID
 }
 
@@ -94,10 +93,33 @@ function addRow() {
   })
 }
 
-function deleteRow() {
+function deleteRow(elem) {
   console.log("Delete clicked!");
+  console.log(elem.firstElementChild.value);
+  var payload = {id: null};
+  payload.id = elem.firstElementChild.value;
+
+
+  var req = new XMLHttpRequest();
+  req.open("POST", "http://52.89.230.63:3000/delete", true);
+  req.setRequestHeader('Content-Type', 'application/json');
+
+  req.addEventListener("load", function() {
+    if (req.status >= 200 && req.status < 400) {
+      var response = JSON.parse(req.responseText);
+      console.log("response from delete: " + JSON.stringify(response));
+    }
+    else
+      console.log("Error in network request: " + request.statusText);
+  })
+
+  req.send(JSON.stringify(payload));  // send row ID
+
+
+  // Delete the row: the parent of the parent of elem (this) node
+  newTable.removeChild(elem.parentNode.parentNode);
   event.preventDefault();
-  }
+}
 
 /*-------- Main Method --------*/
 
