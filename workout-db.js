@@ -90,6 +90,34 @@ app.post("/delete", function(req, res, next) {
   })
 })
 
+app.post("/edit", function(req, res, next) {
+  var context = {};
+
+  pool.query("SELECT * FROM workouts WHERE id=?", [ req.body.id ], function(err, result) {
+    if (err) {
+      next(err);
+      return;
+    }
+    // Go to edit page
+    context.results = result;
+    res.render('edit', context);
+  })
+})
+
+app.post("/update", function(req, res, next) {
+  var context = {};
+
+  pool.query("UPDATE workouts SET name=?, reps=?, weight=?, date=?, lbs=? WHERE id=?", [ req.body.name, req.body.reps, req.body.weight, req.body.date, req.body.lbs, req.body.id ], function(err, result) {
+     if (err) {
+       next(err);
+       return;
+      }
+      res.type("application/json");
+      context.result = result;
+      res.send(context);
+  })
+})
+
 app.post("/post", function(req, res, next) {
   var context = {};
 
